@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>controllers.DlgChangeCarOwner &#8212; documentación de landingomez - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para controllers.DlgChangeCarOwner</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">PyQt6</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QTableWidgetItem</span>
+
+<span class="kn">from</span> <span class="nn">controllers</span> <span class="kn">import</span> <span class="n">DlgCalendarController</span>
+<span class="kn">from</span> <span class="nn">daos</span> <span class="kn">import</span> <span class="n">ProvinciaQtDao</span><span class="p">,</span> <span class="n">ClienteQtDao</span><span class="p">,</span> <span class="n">CocheQtDao</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">Cliente</span>
+<span class="kn">from</span> <span class="nn">services</span> <span class="kn">import</span> <span class="n">DniManager</span>
+<span class="kn">from</span> <span class="nn">views</span> <span class="kn">import</span> <span class="n">Ui_dlgChangeCarOwner</span>
+
+
+<div class="viewcode-block" id="DlgChangeCarOwner"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner">[documentos]</a><span class="k">class</span> <span class="nc">DlgChangeCarOwner</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DlgChangeCarOwner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">Ui_dlgChangeCarOwner</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Daos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provincias_dao</span> <span class="o">=</span> <span class="n">ProvinciaQtDao</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clientes_dao</span> <span class="o">=</span> <span class="n">ClienteQtDao</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span> <span class="o">=</span> <span class="n">CocheQtDao</span><span class="p">()</span>
+
+        <span class="c1"># Dlgs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dlg_calendar</span> <span class="o">=</span> <span class="n">DlgCalendarController</span><span class="p">()</span>
+
+        <span class="c1"># Signals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnCancelar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dni_validator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnFechaAltaCli</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlg_calendar</span><span class="o">.</span><span class="n">show</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dlg_calendar</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">Calendar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_date</span><span class="p">)</span>
+
+        <span class="c1"># Load data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_provincias</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_municipios</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_clientes_list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_table_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_client</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load_ficha</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnConfirmar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">confirmar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_lbl_to_mayus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text_lbl_to_mayus</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnConfirmar</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaAltaCli</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkEfectivo</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTarjeta</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTransferencia</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eneableBtns</span><span class="p">)</span>
+
+        <span class="c1"># Carga de estilos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_table_style</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dni_validator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.eneableBtns"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.eneableBtns">[documentos]</a>    <span class="k">def</span> <span class="nf">eneableBtns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Activa botonera en itneracción con usuario para mejorar experiencia de uso.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">DniManager</span><span class="o">.</span><span class="n">validate_dni</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">text</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnConfirmar</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnConfirmar</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error al activar botones&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.confirmar"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.confirmar">[documentos]</a>    <span class="k">def</span> <span class="nf">confirmar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento asociado al botón de confirmación de cambio de propietario del coche</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">matricula_coche</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="n">datos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_interface</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ClienteQtDao</span><span class="o">.</span><span class="n">exists_dni</span><span class="p">(</span><span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">]):</span>
+                <span class="n">CocheQtDao</span><span class="o">.</span><span class="n">change_owner</span><span class="p">(</span><span class="n">matricula_coche</span><span class="p">,</span> <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">])</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Confirmacion&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;El propietario se ha actualizado con éxito.&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;fecha_alta&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">datos</span><span class="p">[</span>
+                    <span class="s1">&#39;formas_pago&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Aviso&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Deben cubrirse los campos obligatorios.&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">DniManager</span><span class="o">.</span><span class="n">validate_dni</span><span class="p">(</span><span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">]):</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Aviso&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;DNI inválido.&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cliente</span> <span class="o">=</span> <span class="n">Cliente</span><span class="p">(</span><span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;fecha_alta&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;direccion&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;provincia&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;municipio&#39;</span><span class="p">],</span>
+                                      <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;formas_pago&#39;</span><span class="p">])</span>
+
+                    <span class="n">ClienteQtDao</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">cliente</span><span class="p">)</span>
+                    <span class="n">CocheQtDao</span><span class="o">.</span><span class="n">change_owner</span><span class="p">(</span><span class="n">matricula_coche</span><span class="p">,</span> <span class="n">datos</span><span class="p">[</span><span class="s1">&#39;dni&#39;</span><span class="p">])</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Confirmación&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;El propietario se ha creado y actualizado con éxito.&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_table_data</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al confirmar cambio de propietario: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.text_lbl_to_mayus"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.text_lbl_to_mayus">[documentos]</a>    <span class="k">def</span> <span class="nf">text_lbl_to_mayus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Conversor de cadenas de caracteres a formato específico.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">title</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error al procesar las letras capitales&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.dni_validator"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.dni_validator">[documentos]</a>    <span class="k">def</span> <span class="nf">dni_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Validador de dni segun reglas de formación de la legislación española.</span>
+<span class="sd">        Basado en el algoritmo de determinación para DNI localizados y nacionales.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">DniManager</span><span class="o">.</span><span class="n">validate_dni</span><span class="p">(</span><span class="n">dni</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblValidarDNI</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;color:green&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblValidarDNI</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;V&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">dni</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color: none&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblValidarDNI</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;color:red&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblValidarDNI</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">dni</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color: #F64E4E&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error al mostrar marcador validez dni: &quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.read_interface"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.read_interface">[documentos]</a>    <span class="k">def</span> <span class="nf">read_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Lectura de datos de la interfaz gráfica asociada a la gestión de propietarios de coches.</span>
+
+<span class="sd">        :return: datos de propietario</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">formas_pago</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkEfectivo</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                <span class="n">formas_pago</span> <span class="o">=</span> <span class="n">formas_pago</span> <span class="o">+</span> <span class="s1">&#39;efectivo;&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTarjeta</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                <span class="n">formas_pago</span> <span class="o">=</span> <span class="n">formas_pago</span> <span class="o">+</span> <span class="s1">&#39;tarjeta;&#39;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTransferencia</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+                <span class="n">formas_pago</span> <span class="o">=</span> <span class="n">formas_pago</span> <span class="o">+</span> <span class="s1">&#39;transferencia;&#39;</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;dni&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                <span class="s1">&#39;nombre&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                <span class="s1">&#39;fecha_alta&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaAltaCli</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                <span class="s1">&#39;direccion&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+                <span class="s1">&#39;provincia&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">currentText</span><span class="p">(),</span>
+                <span class="s1">&#39;municipio&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniCli</span><span class="o">.</span><span class="n">currentText</span><span class="p">(),</span>
+                <span class="s1">&#39;formas_pago&#39;</span><span class="p">:</span> <span class="n">formas_pago</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al leer la interface: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_ficha"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_ficha">[documentos]</a>    <span class="k">def</span> <span class="nf">load_ficha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de ficha de de coche asociado.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dni</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+            <span class="n">cliente</span><span class="p">:</span> <span class="n">Cliente</span> <span class="o">=</span> <span class="n">ClienteQtDao</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">dni</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">direccion</span> <span class="o">=</span> <span class="n">cliente</span><span class="o">.</span><span class="n">direccion</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="n">cliente</span><span class="o">.</span><span class="n">provincia</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblNombreFicha</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Nombre:  &#39;</span> <span class="o">+</span> <span class="n">cliente</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblDniFicha</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;DNI:  &#39;</span> <span class="o">+</span> <span class="n">cliente</span><span class="o">.</span><span class="n">dni</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lblDireccionFicha</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Dirección:  &#39;</span> <span class="o">+</span> <span class="n">direccion</span><span class="p">);</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al recuperar la ficha del usuario: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_client"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_client">[documentos]</a>    <span class="k">def</span> <span class="nf">load_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de cliente.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cliente</span><span class="p">:</span> <span class="n">Cliente</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">currentData</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtNombreCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">nombre</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDniCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">dni</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtDirCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">direccion</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaAltaCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">alta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniCli</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">municipio</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">cliente</span><span class="o">.</span><span class="n">provincia</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;tarjeta&#39;</span> <span class="ow">in</span> <span class="n">cliente</span><span class="o">.</span><span class="n">pago</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTarjeta</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;efectivo&#39;</span> <span class="ow">in</span> <span class="n">cliente</span><span class="o">.</span><span class="n">pago</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkEfectivo</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;transferencia&#39;</span> <span class="ow">in</span> <span class="n">cliente</span><span class="o">.</span><span class="n">pago</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkTransferencia</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_clientes_list"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_clientes_list">[documentos]</a>    <span class="k">def</span> <span class="nf">load_clientes_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de lista de clientes.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">clientes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clientes_dao</span><span class="o">.</span><span class="n">readAll</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clientes</span><span class="p">:</span>
+                <span class="nb">input</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">nombre</span> <span class="o">+</span> <span class="s1">&#39; - [&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">dni</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbCli</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al cargar clientes en el buscador de clientes: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_date"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_date">[documentos]</a>    <span class="k">def</span> <span class="nf">load_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qDate</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de fecha por el horario internacional UTC a región específica.</span>
+
+<span class="sd">        :param qDate:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">/</span><span class="si">{1}</span><span class="s2">/</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">qDate</span><span class="o">.</span><span class="n">day</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">month</span><span class="p">(),</span> <span class="n">qDate</span><span class="o">.</span><span class="n">year</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">txtFechaAltaCli</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dlg_calendar</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al cargar la fecha de alta: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_table_style"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_table_style">[documentos]</a>    <span class="k">def</span> <span class="nf">load_table_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Carga de estilos de tabla.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># ajuste de tabla a marco</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+                <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">ResizeToContents</span><span class="p">)</span>
+
+            <span class="c1"># aplicación de color a tabla</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">                QTableView</span>
+<span class="sd">                {   </span>
+<span class="sd">                    background-color: white;</span>
+<span class="sd">                    gridline-color:grey;</span>
+<span class="sd">                    color: black;</span>
+<span class="sd">                }</span>
+<span class="sd">                QTableView::item </span>
+<span class="sd">                {   </span>
+<span class="sd">                    color: black;</span>
+<span class="sd">                }</span>
+<span class="sd">                QTableView::item:hover</span>
+<span class="sd">                {   </span>
+<span class="sd">                    color: black;</span>
+<span class="sd">                    background: #ffaa00;            </span>
+<span class="sd">                }</span>
+<span class="sd">                QTableView::item:focus</span>
+<span class="sd">                {   </span>
+<span class="sd">                    color: black;          </span>
+<span class="sd">                }</span>
+<span class="sd">                &#39;&#39;&#39;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al aplicar estilos a la tabla: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_table_data"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_table_data">[documentos]</a>    <span class="k">def</span> <span class="nf">load_table_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de datos de tabla</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">coches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">clearContents</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">coche</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coches</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">coche</span><span class="o">.</span><span class="n">propietario</span><span class="o">.</span><span class="n">dni</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">coche</span><span class="o">.</span><span class="n">matricula</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">coche</span><span class="o">.</span><span class="n">marca</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">coche</span><span class="o">.</span><span class="n">modelo</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">tabClientes</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">coche</span><span class="o">.</span><span class="n">motor</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al cargar los datos en la tabla: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_provincias"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_provincias">[documentos]</a>    <span class="k">def</span> <span class="nf">load_provincias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de provincias de la base de datos.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">provincias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">provincias_dao</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">provincias</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al cargar las provincias: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgChangeCarOwner.load_municipios"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgChangeCarOwner.DlgChangeCarOwner.load_municipios">[documentos]</a>    <span class="k">def</span> <span class="nf">load_municipios</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Evento de carga de municipios de la base de datos.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniCli</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">cd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbProCli</span><span class="o">.</span><span class="n">currentData</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">muni</span> <span class="ow">in</span> <span class="n">cd</span><span class="o">.</span><span class="n">municipios</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">cmbMuniCli</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">muni</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">muni</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al cargar los municipios: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">landingomez</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Manuel.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

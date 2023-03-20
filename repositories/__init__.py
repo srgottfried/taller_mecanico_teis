@@ -1,0 +1,5 @@
+from .ServicioRepository import ServicioRepository
+from .LineaFacturaRepository import LineaFacturaRepository
+from .FacturaRepository import FacturaRepository
+from .CocheRepository import CocheRepository
+from .ClienteRepository import ClienteRepository

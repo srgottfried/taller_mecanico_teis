@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>repositories package &#8212; documentación de landingomez - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="repositories-package">
+<h1>repositories package<a class="headerlink" href="#repositories-package" title="Enlace permanente a este encabezado">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Enlace permanente a este encabezado">¶</a></h2>
+</section>
+<section id="module-repositories.ClienteRepository">
+<span id="repositories-clienterepository-module"></span><h2>repositories.ClienteRepository module<a class="headerlink" href="#module-repositories.ClienteRepository" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="repositories.ClienteRepository.ClienteRepository">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">repositories.ClienteRepository.</span></span><span class="sig-name descname"><span class="pre">ClienteRepository</span></span><a class="reference internal" href="../_modules/repositories/ClienteRepository.html#ClienteRepository"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ClienteRepository.ClienteRepository" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase repositorio encargada de la persistencia de datos asociados a la clae Cliente.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ClienteRepository.ClienteRepository.exists">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cliente</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Cliente.Cliente" title="models.Cliente.Cliente"><span class="pre">Cliente</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/ClienteRepository.html#ClienteRepository.exists"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ClienteRepository.ClienteRepository.exists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Informa de existencia de objeto cliente en base de datos</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cliente</strong> – a encontrar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si existe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ClienteRepository.ClienteRepository.getAll">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Cliente.Cliente" title="models.Cliente.Cliente"><span class="pre">models.Cliente.Cliente</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/ClienteRepository.html#ClienteRepository.getAll"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ClienteRepository.ClienteRepository.getAll" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene una lista con todos los clientes de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lista de clientes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ClienteRepository.ClienteRepository.getById">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.Cliente.Cliente" title="models.Cliente.Cliente"><span class="pre">Cliente</span></a></span></span><a class="reference internal" href="../_modules/repositories/ClienteRepository.html#ClienteRepository.getById"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ClienteRepository.ClienteRepository.getById" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene cliente por id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – del cliente</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>cliente</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ClienteRepository.ClienteRepository.save">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cliente</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Cliente.Cliente" title="models.Cliente.Cliente"><span class="pre">Cliente</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/ClienteRepository.html#ClienteRepository.save"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ClienteRepository.ClienteRepository.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Guarda objeto cliente y persiste en cascada todos los objetos asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cliente</strong> – a guardar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-repositories.CocheRepository">
+<span id="repositories-cocherepository-module"></span><h2>repositories.CocheRepository module<a class="headerlink" href="#module-repositories.CocheRepository" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">repositories.CocheRepository.</span></span><span class="sig-name descname"><span class="pre">CocheRepository</span></span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase repositorio encargada de la persistencia de datos asociados a la clae Coche.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository.exists">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coche</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Coche.Coche" title="models.Coche.Coche"><span class="pre">Coche</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository.exists"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository.exists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Informa de la existencia de objeto de tipo coche en la base de datos.
+Usa implementación de método __eq__ para comparación.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coche</strong> – a comparar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si igual</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository.getAll">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Coche.Coche" title="models.Coche.Coche"><span class="pre">models.Coche.Coche</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository.getAll"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository.getAll" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene lista de coches de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Coche]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository.getByDni">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getByDni</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dni</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Coche.Coche" title="models.Coche.Coche"><span class="pre">models.Coche.Coche</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository.getByDni"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository.getByDni" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Recupera un objeto de tipo coche por dni de propietario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dni</strong> – del propietario</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista de coches</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository.getById">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.Coche.Coche" title="models.Coche.Coche"><span class="pre">Coche</span></a></span></span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository.getById"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository.getById" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Recupera un objeto coche de la base de datos por id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – int</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coche</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.CocheRepository.CocheRepository.save">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coche</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Coche.Coche" title="models.Coche.Coche"><span class="pre">Coche</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/repositories/CocheRepository.html#CocheRepository.save"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.CocheRepository.CocheRepository.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Guarda un objeto de tipo coche en la base de datos. Realiza un proceso de persistencia en cascada para los objetos asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coche</strong> – a guardar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-repositories.FacturaRepository">
+<span id="repositories-facturarepository-module"></span><h2>repositories.FacturaRepository module<a class="headerlink" href="#module-repositories.FacturaRepository" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">repositories.FacturaRepository.</span></span><span class="sig-name descname"><span class="pre">FacturaRepository</span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase repositorio encargada de la persistencia de datos asociados a la clae Factura.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.exists">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factura</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.exists"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.exists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Retorna la existencia de una factura pasada por parámetro.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>factura</strong> – para comprobar existencia</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.getAll">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">models.Factura.Factura</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.getAll"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.getAll" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene lista de facturas de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Factura]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.getByClienteId">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getByClienteId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">models.Factura.Factura</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.getByClienteId"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.getByClienteId" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene una lista de objetos factura a partir del id del cliente de la factura.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – del cliente</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista de facturas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.getById">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.getById"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.getById" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Recupera un objeto factura de la base de datos por id de factura</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – int</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Factura</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.getByMatricula">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getByMatricula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matricula</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">models.Factura.Factura</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.getByMatricula"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.getByMatricula" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene una lista de objetos factura a partir de la matrícula asociada</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matricula</strong> – asociada a la factura</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista de matrículas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.getLastInsert">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getLastInsert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.getLastInsert"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.getLastInsert" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Retorna la última factura insertada en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>objeto factura</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.remove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factura</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.remove"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.remove" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Elimina el objeto factura de la base de datos. Elimina en cascada todos los objetos asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>factura</strong> – factura a eliminar.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Booleano</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.FacturaRepository.FacturaRepository.save">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factura</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/repositories/FacturaRepository.html#FacturaRepository.save"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.FacturaRepository.FacturaRepository.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Guarda un objeto factura en la base de datos. Aplica persistencia en cascada para los objetos asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>factura</strong> – objeto a guardar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-repositories.LineaFacturaRepository">
+<span id="repositories-lineafacturarepository-module"></span><h2>repositories.LineaFacturaRepository module<a class="headerlink" href="#module-repositories.LineaFacturaRepository" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">repositories.LineaFacturaRepository.</span></span><span class="sig-name descname"><span class="pre">LineaFacturaRepository</span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase repositorio encargada de la persistencia de datos asociados a la clae LineaFactura.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.exists">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.LineaFactura.LineaFactura" title="models.LineaFactura.LineaFactura"><span class="pre">LineaFactura</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.exists"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.exists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Determina la existencia de linea de factura pasada por parámetro.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>linea</strong> – a confirmar existencia</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si existe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.getAll">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.LineaFactura.LineaFactura" title="models.LineaFactura.LineaFactura"><span class="pre">models.LineaFactura.LineaFactura</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.getAll"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.getAll" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Devuelve lista con todas las líneas de factura de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lista de lineas de factura</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.getByFacturaId">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getByFacturaId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_factura</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.LineaFactura.LineaFactura" title="models.LineaFactura.LineaFactura"><span class="pre">models.LineaFactura.LineaFactura</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.getByFacturaId"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.getByFacturaId" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Retorna lista de lineas de factura por id de factura especificado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id_factura</strong> – a buscar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>lista de lineas de factura correspondientes a la factura de id dado.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.getById">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.LineaFactura.LineaFactura" title="models.LineaFactura.LineaFactura"><span class="pre">LineaFactura</span></a></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.getById"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.getById" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Devuelve linea de factura por id de linea especificado.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – de linea</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>linea de factura por id especificado</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.remove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factura</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Factura.Factura" title="models.Factura.Factura"><span class="pre">Factura</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.remove"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.remove" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Borra línea de factura de la base de datos por objeto. El borrado actua en cascada directa y reflexiva.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>factura</strong> – </p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.remove_by_id">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_linea</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.remove_by_id"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.remove_by_id" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Borra línea de factura de la base de datos por id de línea. El borrado actua en cascada directa y reflexiva.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id_linea</strong> – a borrar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.LineaFacturaRepository.LineaFacturaRepository.save">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.LineaFactura.LineaFactura" title="models.LineaFactura.LineaFactura"><span class="pre">LineaFactura</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/LineaFacturaRepository.html#LineaFacturaRepository.save"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.LineaFacturaRepository.LineaFacturaRepository.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Guarda linea de factura especificada en base de datos. Propaga en cascada la persistencia de objetos asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>linea</strong> – de fatctura a almacenar</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-repositories.ServicioRepository">
+<span id="repositories-serviciorepository-module"></span><h2>repositories.ServicioRepository module<a class="headerlink" href="#module-repositories.ServicioRepository" title="Enlace permanente a este encabezado">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">repositories.ServicioRepository.</span></span><span class="sig-name descname"><span class="pre">ServicioRepository</span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Clase repositorio encargada de la persistencia de datos asociados a la clae Servicio.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository.exists">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">servicio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Servicio.Servicio" title="models.Servicio.Servicio"><span class="pre">Servicio</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository.exists"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository.exists" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Informa de la existenica de Servicio en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>servicio</strong> – buscado</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si exite</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository.getAll">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="models.html#models.Servicio.Servicio" title="models.Servicio.Servicio"><span class="pre">models.Servicio.Servicio</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository.getAll"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository.getAll" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene lista de todos los servicios de la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Lista de servicios de la base de datos</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository.getById">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.Servicio.Servicio" title="models.Servicio.Servicio"><span class="pre">Servicio</span></a></span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository.getById"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository.getById" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Obtiene servicio por id de servicio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – de servicio</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>servicio buscado por id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository.remove">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository.remove"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository.remove" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Borra servicio por id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> – de servicio</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="repositories.ServicioRepository.ServicioRepository.save">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">servicio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.Servicio.Servicio" title="models.Servicio.Servicio"><span class="pre">Servicio</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/repositories/ServicioRepository.html#ServicioRepository.save"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#repositories.ServicioRepository.ServicioRepository.save" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Guarda servicio en base de datos. Persiste en cascada todos los objetos asociados al objeto servicio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>servicio</strong> – a persistir</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>si éxito</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-repositories">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-repositories" title="Enlace permanente a este encabezado">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">landingomez</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Manuel.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/src/repositories.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>controllers.DlgIODataController &#8212; documentación de landingomez - 1.0</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para controllers.DlgIODataController</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span> <span class="nn">xlrd</span>
+<span class="kn">import</span> <span class="nn">xlwt</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtSql</span> <span class="kn">import</span> <span class="n">QSqlQuery</span>
+<span class="kn">from</span> <span class="nn">PyQt6.QtWidgets</span> <span class="kn">import</span> <span class="n">QDialog</span><span class="p">,</span> <span class="n">QMessageBox</span>
+
+<span class="kn">from</span> <span class="nn">controllers</span> <span class="kn">import</span> <span class="n">DlgOpenFileController</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">Cliente</span>
+<span class="kn">from</span> <span class="nn">models.Coche</span> <span class="kn">import</span> <span class="n">Coche</span>
+<span class="kn">from</span> <span class="nn">daos</span> <span class="kn">import</span> <span class="n">ClienteQtDao</span><span class="p">,</span> <span class="n">CocheQtDao</span>
+<span class="kn">from</span> <span class="nn">views</span> <span class="kn">import</span> <span class="n">Ui_dlgEligeCampos</span>
+
+
+<div class="viewcode-block" id="DlgIODataController"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgIODataController.DlgIODataController">[documentos]</a><span class="k">class</span> <span class="nc">DlgIODataController</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Controlador para la transferencia de datos. Gestiona las operaciones de entrada (INPUT) y salida (OUTPUT) de datos</span>
+<span class="sd">    desde la aplicacion.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DlgIODataController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span> <span class="o">=</span> <span class="n">Ui_dlgEligeCampos</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span> <span class="o">=</span> <span class="n">DlgOpenFileController</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span> <span class="o">=</span> <span class="n">CocheQtDao</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span> <span class="o">=</span> <span class="n">ClienteQtDao</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">btnAceptar</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_xml_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DlgIODataController.export_xml_data"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgIODataController.DlgIODataController.export_xml_data">[documentos]</a>    <span class="k">def</span> <span class="nf">export_xml_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Exporta datos a formato XML.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">export_clientes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkClientes</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+            <span class="n">export_coches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkCoches</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">export_coches</span> <span class="ow">or</span> <span class="n">export_clientes</span><span class="p">):</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+                <span class="n">fecha</span> <span class="o">=</span> <span class="n">fecha</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_clientes.xls&#39;</span>
+                <span class="n">directorio</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Guardar copia&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.xls&#39;</span><span class="p">)</span>
+
+                <span class="n">wb</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">export_clientes</span><span class="p">:</span>
+                    <span class="n">sheet1</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Clientes&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;DNI&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Nombre&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Fecha de alta&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;Dirección&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;Provincia&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;Municipio&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;Forma de pago&#39;</span><span class="p">)</span>
+                    <span class="n">fila</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="n">QSqlQuery</span><span class="p">()</span>
+                    <span class="n">query</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="s1">&#39;select * from clientes order by dni&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+                        <span class="k">while</span> <span class="n">query</span><span class="o">.</span><span class="n">next</span><span class="p">():</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+                                <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fila</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+                            <span class="n">fila</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">if</span> <span class="n">export_coches</span><span class="p">:</span>
+                    <span class="n">sheet2</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Coches&#39;</span><span class="p">)</span>
+                    <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Matrícula&#39;</span><span class="p">)</span>
+                    <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;DNI cliente&#39;</span><span class="p">)</span>
+                    <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Marca&#39;</span><span class="p">)</span>
+                    <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;Modelo&#39;</span><span class="p">)</span>
+                    <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;Motor&#39;</span><span class="p">)</span>
+                    <span class="n">fila</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="n">QSqlQuery</span><span class="p">()</span>
+                    <span class="n">query</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="s1">&#39;select * from coches order by matricula&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+                        <span class="k">while</span> <span class="n">query</span><span class="o">.</span><span class="n">next</span><span class="p">():</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                                <span class="n">sheet2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fila</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+                            <span class="n">fila</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">directorio</span><span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Aviso&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Exportación de datos realizada&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error al exportar datos&#39;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgIODataController.import_xml_data"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgIODataController.DlgIODataController.import_xml_data">[documentos]</a>    <span class="k">def</span> <span class="nf">import_xml_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Importa datos en formato XML.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Importar datos&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;All Files (*);;zip (*.zip)&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span><span class="o">.</span><span class="n">accept</span> <span class="ow">and</span> <span class="n">filename</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">documento</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                <span class="n">sheets</span> <span class="o">=</span> <span class="n">documento</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;Clientes&#39;</span> <span class="ow">in</span> <span class="n">sheets</span><span class="p">:</span>
+                    <span class="n">datos</span> <span class="o">=</span> <span class="n">documento</span><span class="o">.</span><span class="n">sheet_by_name</span><span class="p">(</span><span class="s2">&quot;Clientes&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+                        <span class="n">cli</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+                                <span class="n">cli</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)))</span>
+                            <span class="n">cl</span> <span class="o">=</span> <span class="n">Cliente</span><span class="p">(</span>
+                                <span class="n">dni</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="n">nombre</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                <span class="n">alta</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                <span class="n">direccion</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                <span class="n">provincia</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                                <span class="n">municipio</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                                <span class="n">pago</span><span class="o">=</span><span class="n">cli</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span><span class="o">.</span><span class="n">exists_dni</span><span class="p">(</span><span class="n">cli</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="s1">&#39;Coches&#39;</span> <span class="ow">in</span> <span class="n">sheets</span><span class="p">:</span>
+                    <span class="n">datos</span> <span class="o">=</span> <span class="n">documento</span><span class="o">.</span><span class="n">sheet_by_name</span><span class="p">(</span><span class="s2">&quot;Coches&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+                        <span class="n">car</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="k">pass</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">ncols</span><span class="p">):</span>
+                                <span class="n">car</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">cell_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)))</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span><span class="o">.</span><span class="n">exists_dni</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+                                <span class="n">c</span> <span class="o">=</span> <span class="n">Coche</span><span class="p">(</span>
+                                    <span class="n">matricula</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                    <span class="n">marca</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                    <span class="n">modelo</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                                    <span class="n">motor</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span>
+                                    <span class="n">propietario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cliente_dao</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">car</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="p">)</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">matricula</span><span class="p">):</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">coche_dao</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Aviso&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Importación de datos realizada con éxito.&#39;</span><span class="p">)</span>
+                    <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error al importar datos: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DlgIODataController.export_xml_service_data"><a class="viewcode-back" href="../../src/controllers.html#controllers.DlgIODataController.DlgIODataController.export_xml_service_data">[documentos]</a>    <span class="k">def</span> <span class="nf">export_xml_service_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Exporta datos de servicio a formato XML</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">export_servicios</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">chkClientes</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">export_servicios</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fecha</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+                <span class="n">fecha</span> <span class="o">=</span> <span class="n">fecha</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y_%m_</span><span class="si">%d</span><span class="s1">_%H_%M_%S&#39;</span><span class="p">)</span>
+                <span class="n">file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fecha</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_clientes.xls&#39;</span>
+                <span class="n">directorio</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg_open_file</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Guardar copia&#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s1">&#39;.xls&#39;</span><span class="p">)</span>
+
+                <span class="n">wb</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">export_servicios</span><span class="p">:</span>
+                    <span class="n">sheet1</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Servicios&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;CÓDIGO&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;CONCEPTO&#39;</span><span class="p">)</span>
+                    <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;PRECIO-UNIDAD&#39;</span><span class="p">)</span>
+                    <span class="n">fila</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="n">QSqlQuery</span><span class="p">()</span>
+                    <span class="n">query</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="s1">&#39;select * from servicios order by codigo&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
+                        <span class="k">while</span> <span class="n">query</span><span class="o">.</span><span class="n">next</span><span class="p">():</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                                <span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fila</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+                            <span class="n">fila</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">directorio</span><span class="p">)</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s1">&#39;Aviso&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Icon</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s1">&#39;Exportación de SERVICIOS realizada&#39;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error al exportar datos&#39;</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">landingomez</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Manuel.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
